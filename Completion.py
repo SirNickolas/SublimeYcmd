@@ -292,6 +292,7 @@ class YcmdCompletionEventListener(sublime_plugin.EventListener):
             self.ready_from_defer = False
             return (cpl, sublime.INHIBIT_WORD_COMPLETIONS | sublime.INHIBIT_EXPLICIT_COMPLETIONS)
 
+        active_view().run_command("hide_auto_complete")
         filepath = get_file_path()
         row, col = view.rowcol(locations[0])
         content = view.substr(sublime.Region(0, view.size()))
@@ -309,7 +310,6 @@ class YcmdCompletionEventListener(sublime_plugin.EventListener):
         proposals = list(self.generate_completion_items(jsonResp['completions']))
 
         if proposals:
-            active_view().run_command("hide_auto_complete")
             self.completions = proposals
             self.ready_from_defer = True
             self._run_auto_complete()
