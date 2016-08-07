@@ -303,6 +303,9 @@ class YcmdCompletionEventListener(sublime_plugin.EventListener):
                             cpl.pop()
                             break
 
+            for kv in cpl:
+                if kv[0].endswith("\t[ID]"):
+                    kv[0] = kv[0][:-5]
             return (cpl, sublime.INHIBIT_WORD_COMPLETIONS | sublime.INHIBIT_EXPLICIT_COMPLETIONS)
 
         active_view().run_command("hide_auto_complete")
