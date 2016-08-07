@@ -362,14 +362,15 @@ class YcmdCompletionEventListener(sublime_plugin.EventListener):
         view_cache = {}
         regions = []
         for problem in problems:
-            lineno = problem['location']['line_num']
-            colno = problem['location']['column_num']
-            line_regions = view_cache.setdefault(lineno - 1, {})
-            message = ERROR_MESSAGE_TEMPLATE.format(**problem)
-            print(PRINT_ERROR_MESSAGE_TEMPLATE.format(message, lineno, colno))
-            region = view.word(view.text_point(lineno - 1, colno - 1))
-            regions.append(region)
-            line_regions[(region.a, region.b)] = message
+            if problem["kind"] != "ERROR":
+                lineno = problem['location']['line_num']
+                colno = problem['location']['column_num']
+                line_regions = view_cache.setdefault(lineno - 1, {})
+                message = ERROR_MESSAGE_TEMPLATE.format(**problem)
+                print(PRINT_ERROR_MESSAGE_TEMPLATE.format(message, lineno, colno))
+                region = view.word(view.text_point(lineno - 1, colno - 1))
+                regions.append(region)
+                line_regions[(region.a, region.b)] = message
         self.view_cache[view_id] = view_cache
         style = (sublime.DRAW_NO_FILL | sublime.DRAW_NO_OUTLINE |
                  sublime.DRAW_SQUIGGLY_UNDERLINE)
