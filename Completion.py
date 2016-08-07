@@ -290,6 +290,19 @@ class YcmdCompletionEventListener(sublime_plugin.EventListener):
             cpl = self.completions
             self.completions = []
             self.ready_from_defer = False
+
+            view = active_view()
+            sel = view.sel()
+            if len(sel) == 1:
+                region = sel[0]
+                if region.empty():
+                    word = view.substr(view.word(region))
+                    for i in range(len(cpl)):
+                        if cpl[i][1] == word:
+                            cpl[i] = cpl[-1]
+                            cpl.pop()
+                            break
+
             return (cpl, sublime.INHIBIT_WORD_COMPLETIONS | sublime.INHIBIT_EXPLICIT_COMPLETIONS)
 
         active_view().run_command("hide_auto_complete")
