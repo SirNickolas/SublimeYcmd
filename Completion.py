@@ -131,9 +131,13 @@ def lang(view):
     global USER_LANGUAGES
     if USER_LANGUAGES is None:
         USER_LANGUAGES = load_active_languages(read_settings())
-    for language in USER_LANGUAGES:
-        if view.match_selector(view.sel()[0].begin(), 'source.%s' % LANG_MAP[language]):
-            return language.replace('c++', 'cpp').replace('js', 'javascript')
+    sel = view.sel()
+    if len(sel) > 0:
+        pos = sel[0].begin()
+        for language in USER_LANGUAGES:
+            if view.match_selector(pos, 'source.%s' % LANG_MAP[language]):
+                return language.replace('c++', 'cpp').replace('js', 'javascript')
+
     return None
 
 
